@@ -222,6 +222,25 @@ body {
   background: var(--color-primary);
 }
 
+/* Custom scrollbar for register form using Extra4 color */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f5ebf0;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #741b47; /* Extra4 color */
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5c1a35; /* Darker shade of Extra4 */
+}
+
 /* Form focus states with VitaPink colors */
 .form-input:focus {
   outline: none;

@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(100),
     phone_number VARCHAR(20),
     birth_date DATE,
+    gender ENUM('Male', 'Female'),
     blood_type ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'),
     
     -- Address Information

@@ -2,47 +2,48 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
 class Config:
-    """Base configuration class"""
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'vitapink-dev-secret-key'
-    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'vitapink-jwt-secret-key'
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
+    """Base configuration class."""
     
-    # Database configuration
+    # Flask Configuration
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'vitapink-bloodbank-secret-key-2025'
+    
+    # Database Configuration
     DB_HOST = os.environ.get('DB_HOST') or 'localhost'
-    DB_PORT = os.environ.get('DB_PORT') or 3306
+    DB_PORT = int(os.environ.get('DB_PORT') or 3306)
     DB_NAME = os.environ.get('DB_NAME') or 'vitapink_bloodbank'
     DB_USER = os.environ.get('DB_USER') or 'root'
-    DB_PASSWORD = os.environ.get('DB_PASSWORD') or ''
+    DB_PASSWORD = os.environ.get('DB_PASSWORD') or 'admin'
     
-    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # JWT Configuration
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'vitapink-jwt-secret-2025'
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     
-    # External API configurations
-    GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
-    ONESIGNAL_APP_ID = os.environ.get('ONESIGNAL_APP_ID')
-    ONESIGNAL_REST_API_KEY = os.environ.get('ONESIGNAL_REST_API_KEY')
+    # CORS Configuration
+    CORS_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
     
-    # CORS settings
-    CORS_HEADERS = 'Content-Type'
+    # Application Configuration
+    DEBUG = True
+    TESTING = False
 
 class DevelopmentConfig(Config):
-    """Development configuration"""
+    """Development configuration."""
     DEBUG = True
-    FLASK_ENV = 'development'
 
 class ProductionConfig(Config):
-    """Production configuration"""
+    """Production configuration."""
     DEBUG = False
-    FLASK_ENV = 'production'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 
 class TestingConfig(Config):
-    """Testing configuration"""
+    """Testing configuration."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    DEBUG = True
 
 # Configuration dictionary
 config = {

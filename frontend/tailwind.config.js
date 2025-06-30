@@ -7,39 +7,31 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // VitaPink Brand Colors - Google Docs Magenta Palette
+        // VitaPink Brand Colors - Custom Color Palette
         primary: {
-          50: '#f3e5f5',   // Very light magenta
-          100: '#e1bee7',  // Light magenta 3
-          200: '#ce93d8',  // Light magenta 2
-          300: '#ba68c8',  // Light magenta 1
-          400: '#ab47bc',  // Light magenta 1
-          500: '#9c27b0',  // Main magenta
-          600: '#8e24aa',  // Dark magenta 1
-          700: '#7b1fa2',  // Darker magenta
-          800: '#6a1b9a',  // Dark magenta 1
-          900: '#4a148c'   // Dark magenta 2
+          50: '#fdf2f8',   // Very light pink
+          100: '#fce7f3',  // Light pink
+          200: '#fbcfe8',  // Lighter pink
+          300: '#f9a8d4',  // Light pink
+          400: '#f472b6',  // Medium pink
+          500: '#ec4899',  // Pink
+          600: '#db2777',  // Darker pink
+          700: '#be185d',  // Dark pink
+          800: '#9d174d',  // Very dark pink
+          900: '#831843'   // Darkest pink
         },
-        secondary: {
-          50: '#ffffff',   // White
-          100: '#f8f5f9',  // Very light tint
-          200: '#f3e5f5',  // Light tint
-          300: '#e1bee7',  // Light magenta 3
-          400: '#ce93d8',  // Light magenta 2
-          500: '#ba68c8',  // Medium magenta
-          600: '#ab47bc',  // Light magenta 1
-          700: '#9c27b0',  // Main magenta
-          800: '#8e24aa',  // Dark magenta 1
-          900: '#6a1b9a'   // Dark magenta 1
-        },
-        // VitaPink specific colors using Google Docs Magenta
+        // VitaPink Custom Colors from color.txt
         vitapink: {
-          white: '#ffffff',        // White
-          lightMagenta3: '#e1bee7', // Light magenta 3
-          lightMagenta2: '#ce93d8', // Light magenta 2
-          lightMagenta1: '#ab47bc', // Light magenta 1
-          darkMagenta1: '#8e24aa',  // Dark magenta 1
-          darkMagenta2: '#4a148c'   // Dark magenta 2
+          main: '#ead1dc',      // MainColor: R234 G209 B220
+          extra1: '#d5a6bd',    // ExtraColors: R213 G166 B189
+          extra2: '#c27ba0',    // ExtraColors: R194 G123 B160
+          extra3: '#a64d79',    // ExtraColors: R166 G077 B121
+          extra4: '#741b47',    // ExtraColors: R116 G027 B071
+          // Additional shades for better UI
+          light: '#f5ebf0',     // Lighter version of main
+          lighter: '#faf7f8',   // Even lighter
+          dark: '#5c1a35',      // Darker version
+          darker: '#3d1123'     // Even darker
         },
         success: {
           50: '#f0fdf4',
@@ -149,10 +141,9 @@ module.exports = {
     }
   },
   plugins: [
-    require('@tailwindcss/forms')({
-      strategy: 'class'
-    }),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio')
+    // Plugins can be added here when needed
+    // require('@tailwindcss/forms'),
+    // require('@tailwindcss/typography'),
+    // require('@tailwindcss/aspect-ratio')
   ]
 } 

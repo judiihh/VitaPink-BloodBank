@@ -1,55 +1,77 @@
-from app import create_app
-from app.models import BloodInventory
 import os
+from flask import Flask, jsonify
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+from config import config
 
-# Create Flask application
-app = create_app()
-
-@app.before_first_request
-def initialize_database():
-    """Initialize database with default data"""
-    try:
-        # Initialize blood inventory with all blood types
-        BloodInventory.initialize_inventory()
-        print("Database initialized successfully")
-    except Exception as e:
-        print(f"Error initializing database: {e}")
-
-@app.route('/')
-def index():
-    """Root endpoint"""
-    return {
-        'message': 'VitaPink BloodBank API',
-        'version': '1.0.0',
-        'status': 'active',
-        'endpoints': {
-            'auth': '/api/auth',
-            'donors': '/api/donors',
-            'inventory': '/api/inventory',
-            'donations': '/api/donations',
-            'locations': '/api/locations'
+def create_app(config_name=None):
+    """Application factory pattern."""
+    if config_name is None:
+        config_name = os.environ.get('FLASK_ENV', 'development')
+    
+    app = Flask(__name__)
+    app.config.from_object(config[config_name])
+    
+    # Initialize extensions
+    CORS(app, origins=app.config['CORS_ORIGINS'])
+    jwt = JWTManager(app)
+    
+    # JWT error handlers for debugging
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        print(f"JWT Error: Token expired - {jwt_payload}")
+        return jsonify({'message': 'Token has expired'}), 422
+    
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        print(f"JWT Error: Invalid token - {error}")
+        return jsonify({'message': 'Invalid token'}), 422
+    
+    @jwt.unauthorized_loader
+    def missing_token_callback(error):
+        print(f"JWT Error: Missing token - {error}")
+        return jsonify({'message': 'Authorization token is required'}), 422
+    
+    # Register blueprints
+    from routes.auth import auth_bp
+    from routes.users import users_bp
+    
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(users_bp, url_prefix='/api/users')
+    
+    # Health check endpoint
+    @app.route('/health')
+    def health_check():
+        return {
+            'status': 'healthy',
+            'message': 'VitaPink BloodBank API is running',
+            'version': '1.0.0'
         }
-    }
-
-@app.route('/health')
-def health_check():
-    """Health check endpoint"""
-    return {
-        'status': 'healthy',
-        'timestamp': str(app.config.get('JWT_ACCESS_TOKEN_EXPIRES')),
-        'database': 'connected'
-    }
+    
+    # Root endpoint
+    @app.route('/')
+    def index():
+        return {
+            'message': 'VitaPink BloodBank API',
+            'version': '1.0.0',
+            'status': 'active',
+            'endpoints': {
+                'auth': '/api/auth',
+                'users': '/api/users',
+                'health': '/health'
+            }
+        }
+    
+    return app
 
 if __name__ == '__main__':
-    # Get configuration from environment
-    debug = os.getenv('FLASK_ENV') == 'development'
-    host = os.getenv('FLASK_HOST', '0.0.0.0')
-    port = int(os.getenv('FLASK_PORT', 5000))
+    app = create_app()
+    port = int(os.environ.get('PORT', 5000))
+    host = os.environ.get('HOST', '0.0.0.0')
     
     print(f"Starting VitaPink BloodBank API...")
-    print(f"Environment: {os.getenv('FLASK_ENV', 'development')}")
+    print(f"Environment: {os.environ.get('FLASK_ENV', 'development')}")
     print(f"Host: {host}")
     print(f"Port: {port}")
-    print(f"Debug: {debug}")
     
-    app.run(host=host, port=port, debug=debug) 
+    app.run(host=host, port=port, debug=True) 
